@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login - Navigation App</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #6C63FF, #00C2FF);
+  }
+
+  .card {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    transition: transform 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .logo {
+    font-size: 28px;
+    font-weight: 600;
+    color: #6C63FF;
+    margin-bottom: 30px;
+  }
+
+  h2 {
+    margin-bottom: 25px;
+    color: #333;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+
+  input:focus {
+    border-color: #6C63FF;
+    outline: none;
+    box-shadow: 0 0 5px rgba(108,99,255,0.3);
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 8px;
+    background: #6C63FF;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  button:hover {
+    background: #574fd6;
+  }
+
+  .text-center {
+    margin-top: 15px;
+    font-size: 14px;
+  }
+
+  .text-center a {
+    color: #6C63FF;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .text-center a:hover {
+    text-decoration: underline;
+  }
+
+  @media(max-width: 480px) {
+    .card { padding: 30px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">Navigation App</div>
+  <h2>Login</h2>
+
+  <input id="email" placeholder="Email" type="email">
+  <input id="password" placeholder="Password" type="password">
+  <button id="loginBtn">Login</button>
+
+  <div class="text-center">
+    Don't have an account? <a href="signup.html">Sign Up</a>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD-gWgipC7y3WZaYgQY4VMIdpMTuGT89J8",
+    authDomain: "navigation-app-1a6c7.firebaseapp.com",
+    projectId: "navigation-app-1a6c7",
+    storageBucket: "navigation-app-1a6c7.firebasestorage.app",
+    messagingSenderId: "755943583442",
+    appId: "1:755943583442:web:4838a4a112ea2e95ddc70b"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  loginBtn.onclick = () => {
+    signInWithEmailAndPassword(auth, email.value, password.value)
+      .then(() => {
+        window.location.href = "index.html";
+      })
+      .catch(err => alert(err.message));
+  };
+</script>
+
+</body>
+</html>

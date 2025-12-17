@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Up - Navigation App</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #FF6C63, #FFB300); /* Different gradient for signup */
+  }
+
+  .card {
+    background: #fff;
+    padding: 45px 35px;
+    border-radius: 20px; /* Slightly more rounded than login */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  }
+
+  .logo {
+    font-size: 30px;
+    font-weight: 700;
+    color: #FF6C63;
+    margin-bottom: 30px;
+  }
+
+  h2 {
+    margin-bottom: 25px;
+    color: #333;
+  }
+
+  input {
+    width: 100%;
+    padding: 16px 18px;
+    margin: 12px 0;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: all 0.25s;
+  }
+
+  input:focus {
+    border-color: #FF6C63;
+    outline: none;
+    box-shadow: 0 0 8px rgba(255,108,99,0.4);
+  }
+
+  button {
+    width: 100%;
+    padding: 16px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 12px;
+    background: #FF6C63;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  button:hover {
+    background: #e0554f;
+  }
+
+  .text-center {
+    margin-top: 18px;
+    font-size: 14px;
+  }
+
+  .text-center a {
+    color: #FF6C63;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .text-center a:hover {
+    text-decoration: underline;
+  }
+
+  @media(max-width:480px) {
+    .card { padding: 35px 25px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">Navigation App</div>
+  <h2>Create Account</h2>
+
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button id="signupBtn">Sign Up</button>
+
+  <div class="text-center">
+    Already have an account? <a href="login.html">Login</a>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD-gWgipC7y3WZaYgQY4VMIdpMTuGT89J8",
+    authDomain: "navigation-app-1a6c7.firebaseapp.com",
+    projectId: "navigation-app-1a6c7",
+    storageBucket: "navigation-app-1a6c7.firebasestorage.app",
+    messagingSenderId: "755943583442",
+    appId: "1:755943583442:web:4838a4a112ea2e95ddc70b"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  signupBtn.onclick = () => {
+    createUserWithEmailAndPassword(auth, email.value, password.value)
+      .then(() => {
+        alert("Signup successful ✅");
+        window.location.href = "login.html";
+      })
+      .catch(err => alert(err.message));
+  };
+</script>
+
+</body>
+</html>

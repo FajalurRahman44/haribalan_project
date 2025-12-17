@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Navigation App</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Leaflet Routing CSS -->
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .top-bar {
+      padding: 10px;
+      background: #ffffff;
+      display: flex;
+      gap: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 18px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #map {
+      height: calc(100vh - 60px);
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-bar">
+    <input id="destination" type="text" placeholder="Enter destination (e.g. Marina Beach)">
+    <button onclick="startNavigation()">Navigate</button>
+    <button onclick="logout()">Logout</button>
+
+  </div>
+
+  <div id="map"></div>
+
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+ <script>
+  let map, userMarker, routingControl;
+  let currentLat = null, currentLng = null;
+
+  window.initMap = function () {
+    map = L.map('map').setView([0, 0], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    navigator.geolocation.watchPosition(pos => {
+      currentLat = pos.coords.latitude;
+      currentLng = pos.coords.longitude;
+
+      if (!userMarker) {
+        userMarker = L.marker([currentLat, currentLng]).addTo(map);
+        map.setView([currentLat, currentLng], 15);
+      } else {
+        userMarker.setLatLng([currentLat, currentLng]);
+      }
+    }, () => alert("Location denied"));
+  };
+
+  window.startNavigation = function () {
+    if (currentLat === null) {
+      alert("Waiting for GPS...");
+      return;
+    }
+
+    const destination = document.getElementById("destination").value;
+    if (!destination) return alert("Enter destination");
+
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${destination}`)
+      .then(r => r.json())
+      .then(data => {
+        if (!data.length) return alert("Destination not found");
+
+        if (routingControl) map.removeControl(routingControl);
+
+        routingControl = L.Routing.control({
+          waypoints: [
+            L.latLng(currentLat, currentLng),
+            L.latLng(data[0].lat, data[0].lon)
+          ],
+          addWaypoints: false,
+          routeWhileDragging: true
+        }).addTo(map);
+      });
+  };
+</script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD-gWgipC7y3WZaYgQY4VMIdpMTuGT89J8",
+    authDomain: "navigation-app-1a6c7.firebaseapp.com",
+    projectId: "navigation-app-1a6c7",
+    appId: "1:755943583442:web:4838a4a112ea2e95ddc70b"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, user => {
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      window.initMap(); // 🔥 IMPORTANT
+    }
+  });
+
+  window.logout = () => {
+    signOut(auth).then(() => {
+      window.location.href = "login.html";
+    });
+  };
+</script>
+ 
+  
+
+  
+
+</body>
+</html>
